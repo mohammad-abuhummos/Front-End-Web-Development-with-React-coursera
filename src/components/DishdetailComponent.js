@@ -32,7 +32,8 @@ function RenderDish({ dish }) {
     );
   else return <div></div>;
 }
-function RenderComments({ comments }) {
+function RenderComments({ comments, dishId, addComment }) {
+  console.log(dishId);
   function formatDate(string) {
     var options = { year: "numeric", month: "long", day: "numeric" };
     return new Date(string).toLocaleDateString([], options);
@@ -51,7 +52,7 @@ function RenderComments({ comments }) {
             </ul>
           );
         })}
-        <CommentForm />
+        <CommentForm dishId={dishId} addComment={addComment} />
       </div>
     );
   else return <div></div>;
@@ -78,8 +79,12 @@ class CommentForm extends Component {
     });
   }
   handleSubmit(values) {
-    console.log("Current State is: " + JSON.stringify(values));
-    alert("Current State is: " + JSON.stringify(values));
+    this.props.addComment(
+      this.props.dishId,
+      values.rating,
+      values.author,
+      values.comment
+    );
   }
   render() {
     return (
@@ -167,6 +172,7 @@ class CommentForm extends Component {
   }
 }
 const DishDetail = (props) => {
+  console.log(props.dishId);
   return (
     <div className="container">
       <div className="row">
@@ -174,7 +180,11 @@ const DishDetail = (props) => {
           <RenderDish dish={props.dish} />
         </div>
         <div className="col-12 col-md-5 m-1">
-          <RenderComments comments={props.comments} />
+          <RenderComments
+            dishId={props.dish.id}
+            addComment={props.addComment}
+            comments={props.comments}
+          />
         </div>
       </div>
       <div className="row">
